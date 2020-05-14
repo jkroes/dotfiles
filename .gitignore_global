@@ -1,0 +1,10 @@
+# macos Desktop Services
+.DS_Store
+.DS_Store?
+
+# Temporary files
+*.bak
+*.swp
+*.swo
+*~
+*#

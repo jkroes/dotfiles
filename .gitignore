@@ -1,0 +1,31 @@
+# https://git-scm.com/docs/gitignore
+# A separator anywhere except the end of the pattern is relative to the folder
+# containing the .gitignore (the root). Without it, the pattern may match
+# recursively in lower folders. E.g., /* ignores all files at the top level but
+# won't ignore files contained in negated folder patterns.
+
+# git status doesn't show untracked subdir files. Use git ls-files -o to see all
+# untracked files
+
+# Ignore everything
+/*
+# Except hidden files/folders
+!/.*
+
+# Additionally ignore
+/.bash_logout
+/.bashrc
+#
+/.cache
+/.config/coc # CocConfig is stored in .config/nvim
+/.lesshst
+/.local
+/.config/ranger/history
+/.config/nvim/plugged
+#
+/.ctags
+/.fonts
+/.profile
+/.pylint.d
+
+
