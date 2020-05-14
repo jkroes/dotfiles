@@ -17,15 +17,16 @@
 /.bashrc
 #
 /.cache
-/.config/coc # CocConfig is stored in .config/nvim
+/.config/coc/
 /.lesshst
 /.local
 /.config/ranger/history
-/.config/nvim/plugged
+/.config/nvim/plugged/
+/.config/hub
 #
 /.ctags
 /.fonts
 /.profile
-/.pylint.d
+/.pylint.d/
 
 
