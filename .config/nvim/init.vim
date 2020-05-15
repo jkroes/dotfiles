@@ -606,13 +606,15 @@ endif
 " plugin, try disabling coc.nvim and see if it has an effect.
 if has_key(g:plugs, 'coc.nvim')
     " Extensions to install
-    autocmd VimEnter * CocInstall coc-python
+    " autocmd VimEnter * CocInstall coc-python
     "" Enable highlighting references and other (?) stuff
-    autocmd VimEnter * CocInstall coc-highlight
+    " autocmd VimEnter * CocInstall coc-highlight
     " Without this I can't see reference highlights...
-    hi link CocHighlightText Search
+    " hi link CocHighlightText Search
     " Highlight references on cursor hold
-    autocmd CursorHold * call CocActionAsync('highlight')
+    " autocmd CursorHold * call CocActionAsync('highlight')
+    echom 'There seems to have been a recent change in coc.nvim that prevents me from running CocInstall as an autocmd. What is more, sometimes CocInstall seems to have no effect initially. Try opening a python file, editing, and saving. Then try CocInstall. After each docker build, you need to install coc-python and coc-highlight.'
+
     " Disable COC completion by default. To enable completion and other
     " configuration, add the filetype to the list within Show_coc_documentation
     autocmd FileType * call DisableCocFT ()
