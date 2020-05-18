@@ -191,10 +191,21 @@ colorscheme palenight
 
 " Environment variables ------------------------------------------------------
 
-" Add user-installed Python modules (like Jedi) to $PATH within vim
-" I believe this is important for external tools that rely on $PATH called
-" from within vim
-let $PATH = expand('~/.local/bin').':' . $PATH
+" Add user-installed Python binaries (like Jedi and nvr) to $PATH within vim
+" Note that this only affects $PATH within vim
+" let $PATH = expand('~/.local/bin').':' . $PATH
+
+" nvr ---------------------------------------------------------------------
+
+" NOTE: Use :w | bd to exit git commit buffers or add this to init.vim to
+" enable :wq. If this isn't enabled, toggling the terminal after running
+" git commit within it will show that the command is still waiting for the
+" buffer to be deleted.
+autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
+
+" NOTE: This must be in the vimrc, not the shell config, to avoid spawning a
+" nested nvim process.
+let $GIT_EDITOR = 'nvr --remote-wait'
 
 " Mappings ----------------------------------------------------------------
 let g:mapleader = "\<Space>"
@@ -509,7 +520,11 @@ if has_key(g:plugs, 'neoterm')
     " Language REPLs
     let g:neoterm_repl_python = 'ipython3 --no-autoindent'
     " Easy escape from the terminal
-    tnoremap kj <C-\><C-n>
+    " TODO: autocmd to unmap when calling ranger, as it forces a long pause for
+    " navigating upward via "k"
+    " tnoremap kj <C-\><C-n>
+    tnoremap <Esc> <C-\><C-n>
+
     " Bindings that operate on tab-specific teriminal
     " (or last active terminal if not tab-specific)
     nnoremap <localleader>c :<c-u>exec v:count.'Tclear!'<CR>
