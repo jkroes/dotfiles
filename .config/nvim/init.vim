@@ -344,7 +344,7 @@ endif
 " Within Clap maps:
 "     Use <space> instead of <leader> to search <leader> mappings
 if has_key(g:plugs, 'vim-clap')
-    noremap <Leader>fb :<c-u>Clap buffers<CR>
+    noremap <Leader><leader> :<c-u>Clap buffers<CR>
     " Fuzzy /
     noremap <Leader>fl :<c-u>Clap blines<CR>
     " Fuzzy / in multiple buffers
@@ -507,8 +507,11 @@ endif
 if has_key(g:plugs, 'neoterm')
     " Tab-specific terminals
     let g:neoterm_term_per_tab = 1
-    " Where to open terminal splits
-    let g:neoterm_default_mod = 'belowright'
+    " Start in insert/terminal mode
+    let g:neoterm_autoinsert = 1
+    " How to open terminal (defaults to current buffer)
+    " TODO: Configure to split only if a single window exists
+    " let g:neoterm_default_mod = 'belowright'
     " Scroll term to end after running command or :Topen for a hidden terminal
     let g:neoterm_autoscroll = 1
     " Toggling neoterm opens a terminal with your shell
