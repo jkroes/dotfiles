@@ -29,13 +29,17 @@ call plug#begin()
     " Plug 'jkroes/vim-clap', { 'do': ':Clap install-binary!' }
         "Plug 'ryanoasis/vim-devicons'
     " The best vim-like file browser
-    Plug 'rafaqz/ranger.vim'
+    " Plug 'rafaqz/ranger.vim'
     " Shortened keymaps
     Plug 'jkroes/tinykeymap'
     " Notes
     Plug 'vimwiki/vimwiki'
     " Terminal buffer and REPLs
     Plug 'jkroes/neoterm'
+    "" Illustrates the basic float API
+    "" Not suitable as-is for ranger, as files are opened in the floating window
+    " Plug 'Kraust/floater.nvim'
+    Plug 'voldikss/vim-floaterm'
     " General R support
     Plug 'jalvesaq/Nvim-R'
     " Completion
@@ -383,24 +387,25 @@ endif
 " /, in that order. For absolute paths, either change pwd to / before
 " invocation, or rewrite the source code.
 
-" RangerLCD is provided by ranger.vim for FTP users
-
 " NOTE: ranger.vim is my replacement for clap filer
-if has_key(g:plugs, 'ranger.vim')
-    " Open files
-    map <leader>re :RangerEdit<cr>
-    map <leader>rv :RangerVSplit<cr>
-    map <leader>rs :RangerSplit<cr>
-    map <leader>rt :RangerTab<cr>
-    " Insert or append filepaths
-    map <leader>ri :RangerInsert<cr>
-    map <leader>ra :RangerAppend<cr>
-    " Replace text based on motion (e.g., '<leader>rci(')
-    map <leader>rc :set operatorfunc=RangerChangeOperator<cr>g@
-    " Change dir to last visited dir in ranger
-    map <leader>rd :RangerCD<cr>
+" if has_key(g:plugs, 'ranger.vim')
+"     " Open files
+"     map <leader>re :RangerEdit<cr>
+"     map <leader>rv :RangerVSplit<cr>
+"     map <leader>rs :RangerSplit<cr>
+"     map <leader>rt :RangerTab<cr>
+"     " Insert or append filepaths
+"     map <leader>ri :RangerInsert<cr>
+"     map <leader>ra :RangerAppend<cr>
+"     " Replace text based on motion (e.g., '<leader>rci(')
+"     map <leader>rc :set operatorfunc=RangerChangeOperator<cr>g@
+"     " Change dir to last visited dir in ranger
+"     map <leader>rd :RangerCD<cr>
+"     map <leader>rld :RangerLCD<cr>
+" endif
+if has_key(g:plugs, 'vim-floaterm')
+    noremap <leader>r :<c-u>FloatermNew ranger<cr>
 endif
-
 " Usage:
 " Invoke the windows map (<leader>w)
 " For help, press ?
