@@ -15,7 +15,6 @@
 # Additionally ignore
 /.bash_logout
 /.bashrc
-#
 /.cache
 /.config/coc/
 /.lesshst
@@ -23,9 +22,9 @@
 /.config/ranger/history
 /.config/nvim/plugged/
 /.config/hub
-#
 /.ctags
 /.fonts
 /.profile
 /.pylint.d/
 /.fdignore.save
+.netrwhist
