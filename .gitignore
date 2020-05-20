@@ -20,6 +20,7 @@
 /.lesshst
 /.local
 /.config/ranger/history
+/.config/ranger/bookmarks
 /.config/nvim/plugged/
 /.config/hub
 /.ctags
