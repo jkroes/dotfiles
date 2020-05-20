@@ -46,14 +46,14 @@ call plug#begin()
         " Python
         " Plug 'ncm2/ncm2-jedi'
         " Syntax files
-        Plug 'ncm2/ncm2-syntax'
-        Plug 'Shougo/neco-syntax'
+        " Plug 'ncm2/ncm2-syntax'
+        " Plug 'Shougo/neco-syntax'
         " Filepaths
-        Plug 'ncm2/ncm2-path'
+        " Plug 'ncm2/ncm2-path'
         " GitHub repos
-        Plug 'ncm2/ncm2-github'
+        " Plug 'ncm2/ncm2-github'
         " Words from other buffers
-        Plug 'ncm2/ncm2-bufword'
+        " Plug 'ncm2/ncm2-bufword'
     " General autocompletion (specifically chosen for Python)
     Plug 'neoclide/coc.nvim', {'branch': 'release'} " Python completion
         " " Viml completion
