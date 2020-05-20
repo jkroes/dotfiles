@@ -28,18 +28,13 @@ call plug#begin()
     Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
     " Plug 'jkroes/vim-clap', { 'do': ':Clap install-binary!' }
         "Plug 'ryanoasis/vim-devicons'
-    " The best vim-like file browser
-    " Plug 'rafaqz/ranger.vim'
     " Shortened keymaps
     Plug 'jkroes/tinykeymap'
     " Notes
     Plug 'vimwiki/vimwiki'
     " Terminal buffer and REPLs
     Plug 'jkroes/neoterm'
-    "" Illustrates the basic float API
-    "" Not suitable as-is for ranger, as files are opened in the floating window
-    " Plug 'Kraust/floater.nvim'
-    Plug 'voldikss/vim-floaterm'
+    Plug 'jkroes/vim-floaterm'
     " General R support
     Plug 'jalvesaq/Nvim-R'
     " Completion
@@ -377,35 +372,30 @@ if has_key(g:plugs, 'vim-clap')
     let g:clap_insert_mode_only = 0
 endif
 
-" Usage: Invoke a ranger command. For Ranger[L]CD, navigate to the desired
-" path (in the left pane), then type :q. For all other commands, navigate to a
-" file, then press <CR>.
-
-" ? invokes help
-
-" RangerInsert and RangerAppend return paths that are relative to pwd, ~/, and
-" /, in that order. For absolute paths, either change pwd to / before
-" invocation, or rewrite the source code.
-
-" NOTE: ranger.vim is my replacement for clap filer
-" if has_key(g:plugs, 'ranger.vim')
-"     " Open files
-"     map <leader>re :RangerEdit<cr>
-"     map <leader>rv :RangerVSplit<cr>
-"     map <leader>rs :RangerSplit<cr>
-"     map <leader>rt :RangerTab<cr>
-"     " Insert or append filepaths
-"     map <leader>ri :RangerInsert<cr>
-"     map <leader>ra :RangerAppend<cr>
-"     " Replace text based on motion (e.g., '<leader>rci(')
-"     map <leader>rc :set operatorfunc=RangerChangeOperator<cr>g@
-"     " Change dir to last visited dir in ranger
-"     map <leader>rd :RangerCD<cr>
-"     map <leader>rld :RangerLCD<cr>
-" endif
 if has_key(g:plugs, 'vim-floaterm')
     noremap <leader>r :<c-u>FloatermNew ranger<cr>
+    " TODO: Find a way to make these buffer-local to ranger.
+    " TODO: Why did ranger bindings to nvr ultimately fail?
+    " TODO: Integrate with neoterm or provide equivalent functionality
+
+    " Bindings for ranger process
+    au filetype floaterm call SetFloatermMappings()
+    function! SetFloatermMappings()
+        tnoremap <c-x> <cmd>let g:floaterm_open_command = 'split'  \| call feedkeys("l")<CR>
+        tnoremap <c-v> <cmd>let g:floaterm_open_command = 'vsplit'  \| call feedkeys("l")<CR>
+        tnoremap <c-t> <cmd>let g:floaterm_open_command = 'tabe'  \| call feedkeys("l")<CR>
+    endfunction
+
+    " Set this before invoking floaterm to prevent accidentally altering this
+    " variable's value outside of floaterm ranger. Note that any changes to
+    " floaterm_open_command must be done prior to the following line for the
+    " change to be reflected in floaterm ranger. See
+    " /config/nvim/plugged/vim-floaterm/autoload/floaterm/wrapper/ranger.vim
+    autocmd VimEnter * let g:floaterm_open_command_copy = g:floaterm_open_command
+
+    let g:floaterm_width = 0.9
 endif
+
 " Usage:
 " Invoke the windows map (<leader>w)
 " For help, press ?
@@ -529,7 +519,7 @@ if has_key(g:plugs, 'neoterm')
     let g:neoterm_repl_python = 'ipython3 --no-autoindent'
     " Easy escape from the terminal
     " TODO: autocmd to unmap when calling ranger, as it forces a long pause for
-    " navigating upward via "k"
+    " navigating upward via 'k'
     " tnoremap kj <C-\><C-n>
     tnoremap <Esc> <C-\><C-n>
 

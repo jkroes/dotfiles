@@ -28,5 +28,4 @@
 /.fonts
 /.profile
 /.pylint.d/
-
-
+/.fdignore.save
