@@ -11,6 +11,7 @@
 /*
 # Except hidden files/folders
 !/.*
+!/install.fish
 
 # Additionally ignore
 /.bash_logout
@@ -29,3 +30,18 @@
 /.pylint.d/
 /.fdignore.save
 .netrwhist
+
+# Work PC
+/.ICEauthority
+/.Xauthority
+/.dbus/
+/.emacs.d/
+/.fontconfig/
+/.gem/
+/.mozilla/
+/.npm/
+/.python_history
+/.sudo_as_admin_successful
+/.viminfo
+/.wsl-config
+/.wslrun
