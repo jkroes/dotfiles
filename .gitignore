@@ -45,3 +45,5 @@
 /.viminfo
 /.wsl-config
 /.wslrun
+/.ipython/
+/.config/pulse/
