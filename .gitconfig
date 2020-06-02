@@ -5,8 +5,8 @@
 [credential]
 	helper = cache
 [core]
-	excludesfile = /home/developer/.gitignore_global
-	editor = /home/developer/apps/nvim/usr/bin/nvim
+	excludesfile = ~/.gitignore_global
+	editor = ~/apps/nvim/usr/bin/nvim
 [url "https://github.com/"]
 	insteadOf = git@github.com:
 [url "https://"]
