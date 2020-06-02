@@ -1,5 +1,13 @@
 "let $NVIM_COC_LOG_LEVEL = 'debug'
 
+" Replacement for has('wsl') that can be used globally
+silent !set -q WSL_DISTRO_NAME
+if v:shell_error == 0
+    let g:wsl = 1
+else
+    let g:wsl = 0
+endif
+
 " Initialize vim-plug --------------------------------------------------------
 
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
@@ -74,6 +82,11 @@ endif
 " vim-indent-object.
 
 " Options --------------------------------------------------------------------
+
+" WSL-specific options
+if g:wsl
+    let g:netrw_browsex_viewer = "/mnt/c/Windows/System32/cmd.exe /c start "
+endif
 
 " Enable syntax highlighting, load filetype-specific plugins, and enable
 " filetype-based indentation
@@ -468,12 +481,19 @@ if has_key(g:plugs, 'vimwiki')
     autocmd FileType vimwiki setlocal nowrap
 
     "From |vimwikilinkhandler|:
-    " Use Vim to open external files with the 'vfile:' scheme.
-    " E.g., [abc123](vfile:~/Code/PythonProject/abc123.py)
     function! VimwikiLinkHandler(link)
         let link = a:link
+        " Use Vim to open external files with the 'vfile:' scheme.
+        " E.g., [abc123](vfile:~/Code/PythonProject/abc123.py)
         if link =~# '^vfile:'
             let link = link[1:]
+        elseif g:wsl && link =~# '^http[s]*'
+            try
+                silent execute "!" . g:netrw_browsex_viewer . a:link
+                return 1
+            catch
+            endtry
+            return 0
         else
             return 0
         endif
@@ -482,13 +502,14 @@ if has_key(g:plugs, 'vimwiki')
             echomsg 'Vimwiki Error: Unable to resolve link!'
             return 0
         else
-            exe 'edit ' . fnameescape(link_infos.filename)
+            exe 'tabnew ' . fnameescape(link_infos.filename)
             return 1
         endif
     endfunction
 endif
 " TODO: Enable vimwiki mappings like <BS> for the vfile: scheme, since
-" non-wiki files doesn't have the vimwiki mappings enabled
+" non-wiki files doesn't have the vimwiki mappings enabled and change tabnew to
+" edit.
 " TODO: Explore a way to fully combine nvim-R and vimwiki funcitionality
 " together, and whether any functionality is lost be relying on one filetype or
 " another.
@@ -510,7 +531,7 @@ if has_key(g:plugs, 'neoterm')
     " Scroll term to end after running command or :Topen for a hidden terminal
     let g:neoterm_autoscroll = 1
     " Toggling neoterm opens a terminal with your shell
-    " But sending code (e.g., gx) automatically opens a terminal with the
+    " But sending code (e.g., ;x) automatically opens a terminal with the
     " filetype's REPL command invoked
     if get(g:, 'neoterm_direct_open_repl', 0) == 0
         let g:neoterm_auto_repl_cmd = 1
@@ -531,10 +552,10 @@ if has_key(g:plugs, 'neoterm')
     nnoremap <localleader>q :<c-u>exec v:count.'Tclose!'<CR>
     nnoremap <localleader>r :<c-u>TREPLSendFile<CR>
     " ...and work with motions, selections, and counts
-    " E.g., 2gxx or gxip
-    nmap gx <Plug>(neoterm-repl-send)
-    xmap gx <Plug>(neoterm-repl-send)
-    nmap gxx <Plug>(neoterm-repl-send-line)
+    " E.g., 2;xx or ;xip
+    nmap <localleader>x <Plug>(neoterm-repl-send)
+    xmap <localleader>x <Plug>(neoterm-repl-send)
+    nmap <localleader>xx <Plug>(neoterm-repl-send-line)
 
     " nnoremap <localleader>i :<c-u>echo b:neoterm_id<CR>
 endif
