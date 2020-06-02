@@ -564,7 +564,7 @@ if has_key(g:plugs, 'Nvim-R')
     let R_objbr_allnames = 0 "Show .GlobalEnv hidden objects
     let R_objbr_labelerr = 1 "Warn if label attribute is not class character
     let R_nvimpager = 'tab' "Open help document in new tab or use existing
-    let R_startlibs = 'base,stats,graphics,grDevices,utils,methods,tidyverse' "Omnicompletion and syntax highlighting for unloaded packages listed here
+    let R_start_libs = 'base,stats,graphics,grDevices,utils,methods,tidyverse' "Omnicompletion and syntax highlighting for unloaded packages listed here
     "R_objbr/editor/help_w/h
     "R_path,R_app,R_args
     autocmd FileType r set tags+=~/.cache/Nvim-R/Rtags,~/.cache/Nvim-R/RsrcTags
