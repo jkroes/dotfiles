@@ -50,3 +50,5 @@
 /.wslrun
 /.ipython/
 /.config/pulse/
+/.TinyTeX/
+/.wget-hsts
