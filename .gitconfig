@@ -7,7 +7,7 @@
 [core]
 	excludesfile = ~/.gitignore_global
 	editor = ~/apps/nvim/usr/bin/nvim
-	autocrlf = true
+	autocrlf = input
 [url "https://github.com/"]
 	insteadOf = git@github.com:
 [url "https://"]
