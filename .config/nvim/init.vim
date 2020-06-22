@@ -588,7 +588,8 @@ if has_key(g:plugs, 'Nvim-R')
     let R_start_libs = 'base,stats,graphics,grDevices,utils,methods,tidyverse' "Omnicompletion and syntax highlighting for unloaded packages listed here
     "R_objbr/editor/help_w/h
     "R_path,R_app,R_args
-    autocmd FileType r set tags+=~/.cache/Nvim-R/Rtags,~/.cache/Nvim-R/RsrcTags
+    " Is this related to tag completion?
+    " autocmd FileType r set tags+=~/.cache/Nvim-R/Rtags,~/.cache/Nvim-R/RsrcTags
 endif
 
 if has_key(g:plugs, 'ncm-R')

@@ -30,6 +30,9 @@
 /.pylint.d/
 /.fdignore.save
 .netrwhist
+.bash_history
+/.w3m/
+
 
 # Work PC
 /.ICEauthority
