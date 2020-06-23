@@ -33,6 +33,22 @@
 .bash_history
 /.w3m/
 
+# MacOS
+/.CFUserTextEncoding
+/.DS_Store
+/.Rhistory
+/.Xdefaults
+/.bash_sessions/
+/.cargo/
+/.config/configstore/
+/.docker/
+/.fzf/
+/.gnupg/
+/.hammerspoon/
+/.iterm2/
+/.rstudio-desktop/
+/.serverauth.*
+
 
 # Work PC
 /.ICEauthority
