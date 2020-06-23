@@ -6,7 +6,7 @@
 	helper = cache
 [core]
 	excludesfile = ~/.gitignore_global
-	editor = ~/apps/nvim/usr/bin/nvim
+	editor = nvim
 	autocrlf = input
 [url "https://github.com/"]
 	insteadOf = git@github.com:
