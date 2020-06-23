@@ -18,3 +18,4 @@ switch (uname)
 	# (https://formulae.brew.sh/formula/findutils)
 	set -g fish_user_paths (brew --prefix)/opt/findutils/libexec/gnubin  $fish_user_paths
 end
+set -g fish_user_paths "/usr/local/opt/libxml2/bin" $fish_user_paths
