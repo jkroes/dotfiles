@@ -68,6 +68,7 @@ call plug#begin()
         Plug 'neoclide/coc-neco'
             " coc-neco dependencies
             Plug 'Shougo/neco-vim'
+    Plug 'turbio/bracey.vim'
 call plug#end()
 
 " Install missing plugins
@@ -86,6 +87,8 @@ endif
 " WSL-specific options
 if g:wsl
     let g:netrw_browsex_viewer = "/mnt/c/Windows/System32/cmd.exe /c start "
+elseif has('unix')
+    let g:netrw_browsex_viewer = "open "
 endif
 
 " Enable syntax highlighting, load filetype-specific plugins, and enable
@@ -486,8 +489,13 @@ if has_key(g:plugs, 'vimwiki')
         " Use Vim to open external files with the 'vfile:' scheme.
         " E.g., [abc123](vfile:~/Code/PythonProject/abc123.py)
         if link =~# '^vfile:'
+            " Convert vfile to file scheme
             let link = link[1:]
-        elseif g:wsl && link =~# '^http[s]*'
+        " NOTE: To open HTML files in a browser on MacOS, use the file:
+        " scheme. vimwiki will open it with `open` by default, which is
+        " keyed to your default browser in System Preferences.
+        " TODO: Test behavior of .html on Windows.
+        elseif link =~# '^http[s]*'
             try
                 silent execute "!" . g:netrw_browsex_viewer . a:link
                 return 1
