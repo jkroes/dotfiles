@@ -44,6 +44,7 @@ call plug#begin()
     Plug 'jkroes/neoterm'
     Plug 'jkroes/vim-floaterm'
     " General R support
+    " TODO: Fix this package, then enable
     Plug 'jalvesaq/Nvim-R'
     " Completion
     Plug 'ncm2/ncm2'
@@ -554,16 +555,16 @@ if has_key(g:plugs, 'neoterm')
 
     " Bindings that operate on tab-specific teriminal
     " (or last active terminal if not tab-specific)
-    nnoremap <localleader>c :<c-u>exec v:count.'Tclear!'<CR>
-    nnoremap <localleader>k :<c-u>exec v:count.'Tkill'<CR>
-    nnoremap <localleader>t :<c-u>exec v:count.'Ttoggle'<CR>
-    nnoremap <localleader>q :<c-u>exec v:count.'Tclose!'<CR>
-    nnoremap <localleader>r :<c-u>TREPLSendFile<CR>
+    nnoremap <localleader>tc :<c-u>exec v:count.'Tclear!'<CR>
+    nnoremap <localleader>tk :<c-u>exec v:count.'Tkill'<CR>
+    nnoremap <localleader>tt :<c-u>exec v:count.'Ttoggle'<CR>
+    nnoremap <localleader>tq :<c-u>exec v:count.'Tclose!'<CR>
+    nnoremap <localleader>tr :<c-u>TREPLSendFile<CR>
     " ...and work with motions, selections, and counts
     " E.g., 2;xx or ;xip
-    nmap <localleader>x <Plug>(neoterm-repl-send)
-    xmap <localleader>x <Plug>(neoterm-repl-send)
-    nmap <localleader>xx <Plug>(neoterm-repl-send-line)
+    nmap <localleader>tx <Plug>(neoterm-repl-send)
+    xmap <localleader>tx <Plug>(neoterm-repl-send)
+    nmap <localleader>txx <Plug>(neoterm-repl-send-line)
 
     " nnoremap <localleader>i :<c-u>echo b:neoterm_id<CR>
 endif
@@ -574,6 +575,7 @@ endif
 " TODO: Write helper function to advance the cursor to the line following the
 " end of motion.
 " TODO: Replicate nvim-R commands/funcitonality using neoterm
+
 
 if has_key(g:plugs, 'Nvim-R')
     "See |nvim-r|, |ft-r-indent|, and |R_indent_commented|
@@ -598,6 +600,11 @@ if has_key(g:plugs, 'Nvim-R')
     "R_path,R_app,R_args
     " Is this related to tag completion?
     " autocmd FileType r set tags+=~/.cache/Nvim-R/Rtags,~/.cache/Nvim-R/RsrcTags
+    let R_openpdf = 2
+
+    " TODO: Figure out how to includ trailing space after :RSend while trimming
+    " it elsewhere automatically
+    nmap <localleader>: :RSend
 endif
 
 if has_key(g:plugs, 'ncm-R')

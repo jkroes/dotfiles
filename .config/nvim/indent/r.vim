@@ -3,4 +3,4 @@
 " crazy indentation I have seen in my R scripts. Investigate how nvim-R settings
 " affect indentation with other packages disabled and by tweaking the nvim-R
 " indentation variables.
-let b:did_indent = 1
+" let b:did_indent = 1
