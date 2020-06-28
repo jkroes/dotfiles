@@ -368,6 +368,7 @@ if has_key(g:plugs, 'vim-clap')
     noremap <Leader>fc :<c-u>Clap command<CR>
     noremap <Leader>f: :<c-u>Clap hist:<CR>
     noremap <Leader>f/ :<c-u>Clap hist/<CR>
+    " TODO: Can this show plugin mappings, not just user mappings?
     noremap <Leader>fk :<c-u>Clap maps<CR>
     " Most recently used files
     noremap <Leader>fm :<c-u>Clap history<CR>
@@ -384,7 +385,7 @@ if has_key(g:plugs, 'vim-clap')
     autocmd VimEnter * call filter(v:oldfiles, 'v:val !~ ".*/doc/.*\.txt"')
 
     " Run file/grep/git* providers at project root instead of pwd
-    let g:clap_disable_run_rooter = 0
+    let g:clap_disable_run_rooter = 1
     " Enable normal mode in provider buffer/window
     let g:clap_insert_mode_only = 0
 endif
