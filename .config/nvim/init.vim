@@ -603,9 +603,8 @@ if has_key(g:plugs, 'Nvim-R')
     " autocmd FileType r set tags+=~/.cache/Nvim-R/Rtags,~/.cache/Nvim-R/RsrcTags
     let R_openpdf = 2
 
-    " TODO: Figure out how to includ trailing space after :RSend while trimming
-    " it elsewhere automatically
-    nmap <localleader>: :RSend
+    " <space> required when auto-trimming trailing space
+    nmap <localleader>: :RSend<space>
 endif
 
 if has_key(g:plugs, 'ncm-R')
