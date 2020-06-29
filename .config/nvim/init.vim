@@ -46,23 +46,6 @@ call plug#begin()
     " General R support
     " TODO: Fix this package, then enable
     Plug 'jalvesaq/Nvim-R'
-    " Completion
-    Plug 'ncm2/ncm2'
-        " RStudio-like completion
-        Plug 'gaalcaras/ncm-R'
-            Plug 'roxma/nvim-yarp'
-            " Also depends on nvim-R
-        " Python
-        " Plug 'ncm2/ncm2-jedi'
-        " Syntax files
-        " Plug 'ncm2/ncm2-syntax'
-        " Plug 'Shougo/neco-syntax'
-        " Filepaths
-        " Plug 'ncm2/ncm2-path'
-        " GitHub repos
-        " Plug 'ncm2/ncm2-github'
-        " Words from other buffers
-        " Plug 'ncm2/ncm2-bufword'
     " General autocompletion (specifically chosen for Python)
     Plug 'neoclide/coc.nvim', {'branch': 'release'} " Python completion
         " " Viml completion
@@ -240,11 +223,11 @@ autocmd BufWritePre * %s/\s\+$//e
 
 " Only highlight during incremental search
 " See `set incsearch`
-augroup vimrc-incsearch-highlight
-    autocmd!
-    autocmd CmdlineEnter /,\? :set hlsearch
-    autocmd CmdlineLeave /,\? :set nohlsearch
-augroup END
+" augroup vimrc-incsearch-highlight
+"     autocmd!
+"     autocmd CmdlineEnter /,\? :set hlsearch
+"     autocmd CmdlineLeave /,\? :set nohlsearch
+" augroup END
 
 " Plugin configuration -------------------------------------------------------
 
@@ -577,8 +560,62 @@ endif
 " end of motion.
 " TODO: Replicate nvim-R commands/funcitonality using neoterm
 
-
+" TODO: Configure ;vh via |Nvim-R-df-view-mappings| and
+" |Nvim-R-df-view|
 if has_key(g:plugs, 'Nvim-R')
+    " Start R when editing r,rmd files
+    autocmd FileType r
+                \ if string(g:SendCmdToR) == "function('SendCmdToR_fake')" |
+                \ call StartR("R") |
+                \ endif
+    autocmd FileType rmd
+                \ if string(g:SendCmdToR) == "function('SendCmdToR_fake')" |
+                \ call StartR("R") |
+                \ endif
+    " Quit R when quitting Vim
+    autocmd VimLeave *
+                \ if exists("g:SendCmdToR") &&
+                \ string(g:SendCmdToR) != "function('SendCmdToR_fake')" |
+                \ call RQuit("nosave") |
+                \ endif
+    " Disable autoexpansion of grave accent and replace with a snippet
+    let R_rmdchunk = 0
+    " Object browser configuration
+    let R_objbr_w = 30
+    let R_objbr_opendf = 1 "Show data frame elements
+    let R_objbr_openlist = 1 "Show list elements
+    let R_objbr_allnames = 0 "Show .GlobalEnv hidden objects
+    let R_objbr_labelerr = 1 "Warn if label attribute is not class character
+    " Show examples in the terminal instead of a buffer
+    let R_open_example = 0
+    " Disable R help when using coc.nvim
+    let R_nvimpager = 'no'
+    " Open .ROut files in a split instead of tab
+    let R_routnotab = 1
+    " Windows layout |R_rconsole_height|
+    let R_rconsole_width = 0 " Always open console in horizontal split
+    let R_objbr_place = 'RIGHT' " Rightwards object browser
+    " Send commands to RStudio. TODO: Integrate with RStudio debugger?
+    " let RStudio_cmd = '/Applications/RStudio.app/Contents/MacOS/RStudio'
+    " let RStudio_cmd = 'open /Applications/RStudio.app'
+    " https://cran.rstudio.com/web/packages/rstudioapi/rstudioapi.pdf
+    " Clear current line in console before sending code
+    let R_clear_line = 1
+    " Enable for printing signatures of all methods of generic functions, rather
+    " than just the signature of the generic function (e.g., of print())
+    " TODO: Instead of relying on nvim.list.args, which is called when
+    " R_listmethods is enabled, would it be possible to find which particular
+    " method is being dispatched based on the code?
+    " TODO: Similarly, can coc.nvim dispatch signatures for particular methods
+    " of generic functions (e.g., print.data.frame()), or for parameter
+    " completion? See http://adv-r.had.co.nz/S3.html
+    " Also checkout specialfuns.R's nvim.args function. It may have some
+    " suggestions on how to figure this out.
+    let R_listmethods = 0
+    " Open a single instance of PDF viewer after compiling Rmd to PDF
+    let R_openpdf = 1
+    let R_openhtml = 1
+
     "See |nvim-r|, |ft-r-indent|, and |R_indent_commented|
     let r_indent_ess_comments = 0 "No ess-style comment indentation (for #, ##, and ###)
     let r_indent_ess_compatible = 0 "Indent lines following line ending in '<-'
@@ -590,64 +627,14 @@ if has_key(g:plugs, 'Nvim-R')
     "let R_rcomment_string = '# ' "<LocalLeader>x[x|c|u]
     let r_indent_align_args = 1 "Align function arguments
     let R_close_term = 1
-    let R_objbr_place = 'console,right' "Object browser location
-    let R_objbr_opendf = 1 "Show data frame elements
-    let R_objbr_openlist = 1 "Show list elements
-    let R_objbr_allnames = 0 "Show .GlobalEnv hidden objects
-    let R_objbr_labelerr = 1 "Warn if label attribute is not class character
-    let R_nvimpager = 'tab' "Open help document in new tab or use existing
     let R_start_libs = 'base,stats,graphics,grDevices,utils,methods,tidyverse' "Omnicompletion and syntax highlighting for unloaded packages listed here
     "R_objbr/editor/help_w/h
     "R_path,R_app,R_args
     " Is this related to tag completion?
     " autocmd FileType r set tags+=~/.cache/Nvim-R/Rtags,~/.cache/Nvim-R/RsrcTags
-    let R_openpdf = 2
 
     " <space> required when auto-trimming trailing space
     nmap <localleader>: :RSend<space>
-endif
-
-if has_key(g:plugs, 'ncm-R')
-    " Equiv. to CocConfig's 'suggest.autoTrigger': always
-    let g:ncm2#auto_popup = 1
-    "Equiv. to CocConfig's 'suggest.minTriggerInputLength': 1
-    let g:ncm2#complete_length = 1
-
-    " Prevent automatic selection and text injection into current line, and show
-    " popup even for only one match
-    set completeopt=noinsert,menuone,noselect
-
-    " Enable ncm2 for R
-    autocmd BufEnter *.R,*.Rmd call ncm2#enable_for_buffer()
-
-    autocmd FileType r,rmd call Configure_ncm2_filetypes()
-
-    function! Configure_ncm2_filetypes()
-        " Unlike coc.nvim, the popup appears by default (at least in R) when
-        " you're adjacent to text even after you've moved away from text,
-        " closing the popup. Because of this, the function to check for
-        " backspace isn't necessary.
-        inoremap <buffer><expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-        " Use shift-tab to navigate up the completion menu or backspace.
-        " This differs somewhat from coc.nvim, b/c the popup appears adjacent to
-        " text automatically. So backspace is only possible across empty space.
-        inoremap <buffer><expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-        " The ncm2 README claims that:
-        "     When the <Enter> key is pressed while the popup menu is visible, it
-        "     only hides the menu. Use this mapping to close the menu and also start
-        "     a new line.
-        " I found this to be inverted: By default, the popup hid the menu and
-        " inserted a new line. I wanted the behavior claimed by the README, so I
-        " modified the mapping for the true condition. Then modified it for the
-        " false condition to more closely resemble the coc.nvim mapping.
-        "
-        " If you have issues, the Wiki included a link to this issue:
-        " https://github.com/ncm2/ncm2/issues/163
-        " Check it out for insights if needed.
-        inoremap <buffer><expr> <CR> (pumvisible() ? "\<c-y>" : "\<C-g>u\<CR>")
-        "More or less equivalent to Show_coc_documentation
-        nmap <buffer> K <localleader>rh
-    endfunction
 endif
 
 " NOTE: This plugin is complex, and many features don't seem to work. But while
@@ -655,22 +642,14 @@ endif
 " may be enabled vim-wide. If any odd behavior is discovered with another
 " plugin, try disabling coc.nvim and see if it has an effect.
 if has_key(g:plugs, 'coc.nvim')
-    " Extensions to install
-    " autocmd VimEnter * CocInstall coc-python
-    "" Enable highlighting references and other (?) stuff
-    " autocmd VimEnter * CocInstall coc-highlight
-    " Without this I can't see reference highlights...
-    " hi link CocHighlightText Search
-    " Highlight references on cursor hold
-    " autocmd CursorHold * call CocActionAsync('highlight')
-    echom 'There seems to have been a recent change in coc.nvim that prevents me from running CocInstall as an autocmd. What is more, sometimes CocInstall seems to have no effect initially. Try opening a python file, editing, and saving. Then try CocInstall. After each docker build, you need to install coc-python and coc-highlight.'
+    echom 'There seems to have been a recent change in coc.nvim that prevents me from running CocInstall as an autocmd. What is more, sometimes CocInstall seems to have no effect initially. Try opening a python file, editing, and saving. Then try CocInstall. After each docker build, you need to install coc-python.'
 
     " Disable COC completion by default. To enable completion and other
     " configuration, add the filetype to the list within Show_coc_documentation
     autocmd FileType * call DisableCocFT ()
 
     function! DisableCocFT()
-        if index(['vim', 'python'], &filetype) < 0
+        if index(['vim', 'python', 'r', 'rmd'], &filetype) < 0
             let b:coc_suggest_disable = 1
         else
             call Configure_coc_filetypes()
@@ -680,46 +659,59 @@ if has_key(g:plugs, 'coc.nvim')
     function! Configure_coc_filetypes()
         "Persistent left-hand column for, e.g., debugging indicators
         setlocal signcolumn=yes
-        " Standard statusline recreation
+        " Recreate the standard statusline
         setlocal statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
         " Prepend b/c left of '%<' avoids being trimmed
         setlocal statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
         " If the completion popup is visible, navigate down it. Otherwise, if the
-        " preceding character is \s, <tab>; else trigger the completion popup.
+        " preceding two characters are [^,]\s, <tab>; else trigger the
+        " completion popup.
         inoremap <buffer><expr> <TAB>
               \ pumvisible() ? "\<C-n>" :
               \ Check_space_behind() ? "\<TAB>" :
               \ coc#refresh()
-
         " Use shift-tab to navigate up the completion menu or backspace
         inoremap <buffer><expr><S-TAB>
               \ pumvisible() ? "\<C-p>" :
               \ "\<C-h>"
-
         " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
         " position. See |undo| and |ins-special-special|. So the alternative is
         " to insert a <cr> and break the undo chain.
         inoremap <buffer><expr> <cr>
               \ complete_info()["selected"] != "-1" ? "\<C-y>" :
               \ "\<C-g>u\<CR>"
-
         nmap     <buffer> <leader>dp <Plug>(coc-diagnostic-prev)
         nmap     <buffer> <leader>dn <Plug>(coc-diagnostic-next)
-
         nmap     <buffer> gd <Plug>(coc-definition)
         " NOTE: In the preview window for coc-references, you can determine how to go
         " (e.g., vsplit) by pressing tab on the selected reference
         nmap     <buffer> gr <Plug>(coc-references)
         nnoremap <buffer> K :call Show_coc_documentation()<CR>
+        " Modification of :h coc-nvim example to scroll documentation float and
+        " avoid scrolling linting/error-message floats
+        " NOTE: Pressing C-b at top or C-f at bottom of doc float enters the
+        " floating window. To exit, simply press the opposite key binding.
+	nnoremap <expr><C-f>
+                    \ coc#util#has_float() && coc#util#float_scrollable() ?
+                    \ coc#util#float_scroll(1) :
+                    \ "\<C-f>"
+	nnoremap <expr><C-b>
+                    \ coc#util#has_float() && coc#util#float_scrollable() ?
+                    \ coc#util#float_scroll(0) :
+                    \ "\<C-b>"
     endfunction
 
-    " Check for a space one column before cursor
+    " Check for beginning of line, or a space not preceded by comma (i.e., a
+    " function's argument list)
     function! Check_space_behind() abort
       let col = col('.') - 1
-      return !col || getline('.')[col - 1]  =~# '\s'
+      let line = getline('.')
+      return !col || (line[col - 1]  =~# '\s' && line[col - 2] != ',')
     endfunction
 
+    " NOTE: If you want to use nvim-r help instead of coc help:
+    " nnoremap <buffer> K <localleader>rh
+    " Or integrate it into Show_coc_documentation()
     function! Show_coc_documentation()
       " Vim docs
       if (index(['vim','help'], &filetype) >= 0)
@@ -729,8 +721,9 @@ if has_key(g:plugs, 'coc.nvim')
         call CocAction('doHover')
       endif
     endfunction
-
 endif
+" TODO: Can I combine nvim-r omnicompletion for packages and list elements
+" (e.g., mtcars$cyl) without messing up coc.nvim completion?
 " TODO: Investigate workspace folders, coc-search
 " TODO: Investigate the example tab mapping from the docs for snippet
 " expansion and placeholder jumping
@@ -738,7 +731,3 @@ endif
 " https://www.reddit.com/r/vim/comments/7lnhrt/which_lsp_plugin_should_i_use/
 " NOTE: Most functionality is broken for Python: extract, rename, refactor, etc.
 " The one thing that works beautifully is completion and function signatures
-
-
-" Open init.vim to start
-"e $MYVIMRC

@@ -7,6 +7,8 @@
 
     // TODO: Configure code lens for popup revision history (disabled by default)
 
+
+    "suggest.floatEnable": false,
     // Autoformat on save using language-specific autoformatter
     "coc.preferences.formatOnSaveFiletypes": ["python"],
     "suggest.minTriggerInputLength": 1,
