@@ -558,10 +558,19 @@ endif
 " TODO: Research motions so you can more effectively evaluate code
 " TODO: Write helper function to advance the cursor to the line following the
 " end of motion.
-" TODO: Replicate nvim-R commands/funcitonality using neoterm
 
-" TODO: Configure ;vh via |Nvim-R-df-view-mappings| and
-" |Nvim-R-df-view|
+" TODO: Configure ;vh via |Nvim-R-df-view-mappings| and |Nvim-R-df-view|
+" TODO: If a variable within the environment (i.e., already evaluated) is passed
+" as the positional argument of a generic function such as print or summary, ;rh
+" will show the class-specific documentation based on that variable. E.g.,
+" print(x) where x is a data.frame will show print.data.frame. coc.nvim cannot
+" do so, but it can show a scrollable float for R documentation. There must be a
+" way to combine class dispatch with float.
+" TODO: Why is nvim-r able to open class-specfic help based on the first arg
+" but not able to show a specific signature? All it takes is calling
+" args() instead of help() once you know the specific function name.
+" Investigate the source code. See R_listmethods = 0
+" TODO: Make nvim-r use neoterm???
 if has_key(g:plugs, 'Nvim-R')
     " Start R when editing r,rmd files
     autocmd FileType r
@@ -586,10 +595,10 @@ if has_key(g:plugs, 'Nvim-R')
     let R_objbr_openlist = 1 "Show list elements
     let R_objbr_allnames = 0 "Show .GlobalEnv hidden objects
     let R_objbr_labelerr = 1 "Warn if label attribute is not class character
-    " Show examples in the terminal instead of a buffer
+    " Show examples in the terminal instead of a buffer when disabled
     let R_open_example = 0
-    " Disable R help when using coc.nvim
-    let R_nvimpager = 'no'
+    " Show help in terminal instead of a buffer
+    " let R_nvimpager = 'no'
     " Open .ROut files in a split instead of tab
     let R_routnotab = 1
     " Windows layout |R_rconsole_height|
@@ -601,37 +610,42 @@ if has_key(g:plugs, 'Nvim-R')
     " https://cran.rstudio.com/web/packages/rstudioapi/rstudioapi.pdf
     " Clear current line in console before sending code
     let R_clear_line = 1
-    " Enable for printing signatures of all methods of generic functions, rather
-    " than just the signature of the generic function (e.g., of print())
-    " TODO: Instead of relying on nvim.list.args, which is called when
-    " R_listmethods is enabled, would it be possible to find which particular
-    " method is being dispatched based on the code?
-    " TODO: Similarly, can coc.nvim dispatch signatures for particular methods
-    " of generic functions (e.g., print.data.frame()), or for parameter
-    " completion? See http://adv-r.had.co.nz/S3.html
-    " Also checkout specialfuns.R's nvim.args function. It may have some
-    " suggestions on how to figure this out.
+    " When enabled, this lists the signature of all methods of a generic
+    " function, but the signature of the method that applies to the first
+    " argument would be more appropriate.
     let R_listmethods = 0
     " Open a single instance of PDF viewer after compiling Rmd to PDF
     let R_openpdf = 1
+    " Open compiled HTML in browser
     let R_openhtml = 1
-
-    "See |nvim-r|, |ft-r-indent|, and |R_indent_commented|
-    let r_indent_ess_comments = 0 "No ess-style comment indentation (for #, ##, and ###)
-    let r_indent_ess_compatible = 0 "Indent lines following line ending in '<-'
-    "TODO: Space b/w # and text is proportional to function depth with
-    "R_indent_commented. Investigate source code. May depend on external
-    "indentation or formatting rules.
-    let R_indent_commented = 1 "Reindent after toggling comment
-    "let r_indent_comment_column = 40 "<LocalLeader>;
-    "let R_rcomment_string = '# ' "<LocalLeader>x[x|c|u]
-    let r_indent_align_args = 1 "Align function arguments
+    " Close terminal when R closes (i.e., q() within terminal)
     let R_close_term = 1
-    let R_start_libs = 'base,stats,graphics,grDevices,utils,methods,tidyverse' "Omnicompletion and syntax highlighting for unloaded packages listed here
-    "R_objbr/editor/help_w/h
-    "R_path,R_app,R_args
-    " Is this related to tag completion?
-    " autocmd FileType r set tags+=~/.cache/Nvim-R/Rtags,~/.cache/Nvim-R/RsrcTags
+    " Which packages should be used for omnicompletion and syntax highlighting
+    " before loading any libraries
+    let R_start_libs = 'base,stats,graphics,grDevices,utils,methods,tidyverse'
+
+    " Style guides suggest the following:
+    " x <- function(a, b, c,
+    "               d = 'default') {
+    "   <body>
+    " }
+    " In other words, default arguments on their own lines, closing parenthesis
+    " and opening bracket on the same line as last argument, indented body, and
+    " closing bracket flush with first line in function definition.
+
+    " See |ft-r-indent|, and |R_indent_commented|, but note that their
+    " description of r_indent_ess_compatible is inaccurate. The following is
+    " accurate: When disabled, brackets on lower lines will always be aligned
+    " with the indentation of the line on which the function keyword occurs
+    " during a function definition. No matter what, the body is always indented
+    " relative to the brackets.
+    let r_indent_ess_compatible = 0
+    " If enabled, forces arguments on multiple lines flush against opening
+    " parentheses. If disabled, function arguments will simply be indented if on
+    " new lines. Enabling this complies with multiple style guides. Arguments
+    " without defaults can be placed on the same line up to textwidth, but
+    " arguments with defaults should be placed on their own lines.
+    let r_indent_align_args = 1
 
     " <space> required when auto-trimming trailing space
     nmap <localleader>: :RSend<space>
@@ -716,6 +730,8 @@ if has_key(g:plugs, 'coc.nvim')
       " Vim docs
       if (index(['vim','help'], &filetype) >= 0)
         execute 'h '.expand('<cword>')
+      elseif (index(['r', 'rmd'], &filetype) >= 0)
+          call RAction("help")
       " Non-Vim docs
       else
         call CocAction('doHover')
