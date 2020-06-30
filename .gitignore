@@ -41,6 +41,8 @@
 /.bash_sessions/
 /.cargo/
 /.config/configstore/
+/.config/rstudio/
+/.config/zathura/
 /.docker/
 /.fzf/
 /.gnupg/
@@ -48,7 +50,8 @@
 /.iterm2/
 /.rstudio-desktop/
 /.serverauth.*
-
+/.r/
+/.cups/
 
 # Work PC
 /.ICEauthority
