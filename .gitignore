@@ -71,3 +71,5 @@
 /.config/pulse/
 /.TinyTeX/
 /.wget-hsts
+/.config/dconf/
+/.config/fontconfig/

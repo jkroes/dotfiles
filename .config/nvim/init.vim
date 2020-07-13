@@ -661,7 +661,7 @@ endif
 " may be enabled vim-wide. If any odd behavior is discovered with another
 " plugin, try disabling coc.nvim and see if it has an effect.
 if has_key(g:plugs, 'coc.nvim')
-    echom 'There seems to have been a recent change in coc.nvim that prevents me from running CocInstall as an autocmd. What is more, sometimes CocInstall seems to have no effect initially. Try opening a python file, editing, and saving. Then try CocInstall. After each docker build, you need to install coc-python.'
+    echom 'There seems to have been a recent change in coc.nvim that prevents me from running CocInstall as an autocmd. What is more, sometimes CocInstall seems to have no effect initially. Try opening a python file, editing, and saving. Then try CocInstall. After each docker build, you need to install coc-python and coc-r-lsp.'
 
     " Disable COC completion by default. To enable completion and other
     " configuration, add the filetype to the list within Show_coc_documentation
