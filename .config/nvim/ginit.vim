@@ -1,2 +1,4 @@
-Guifont Source Code Pro:h10
+if exists('g:fvim_loaded')
+    set guifont=Source\ Code\ Pro:h10
+endif
 

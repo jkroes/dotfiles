@@ -86,6 +86,10 @@ set autoindent
 set nosmartindent
 set nocindent
 
+" Always set pwd to %:p:h
+" This means that :e <file> creates file in the directory of current buffer
+set autochdir
+
 " Enable hard wrapping (line breaking) of text and comments at textwidth
 set fo+=tc
 " Disable automatic comment delimiter insertion when starting a new line below a
@@ -455,7 +459,7 @@ if has_key(g:plugs, 'vimwiki')
     let g:vimwiki_autowriteall = 1
     " Table auto formatting can slow things down, but it is useful. For now, I
     " am largely ignoring tables until I learn how to speed it up.
-    let g:vimwiki_table_auto_fmt=0
+    let g:vimwiki_table_auto_fmt=1
     " Quicker folding of sections and code blocks
     " For custom folding expression example, see
     " https://vimwiki.github.io/vimwikiwiki/Tips%20and%20Snips.html
@@ -599,6 +603,7 @@ if has_key(g:plugs, 'Nvim-R')
     let R_open_example = 0
     " Show help in terminal instead of a buffer
     " let R_nvimpager = 'no'
+    let R_nvimpager = 'vertical'
     " Open .ROut files in a split instead of tab
     let R_routnotab = 1
     " Windows layout |R_rconsole_height|
@@ -690,7 +695,8 @@ if has_key(g:plugs, 'coc.nvim')
               \ "\<C-h>"
         " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
         " position. See |undo| and |ins-special-special|. So the alternative is
-        " to insert a <cr> and break the undo chain.
+        " to insert a <cr> and break the undo chain. In Python, <CR> inserts an
+        " equal sign surrounded by space after completion item
         inoremap <buffer><expr> <cr>
               \ complete_info()["selected"] != "-1" ? "\<C-y>" :
               \ "\<C-g>u\<CR>"
@@ -723,21 +729,20 @@ if has_key(g:plugs, 'coc.nvim')
       return !col || (line[col - 1]  =~# '\s' && line[col - 2] != ',')
     endfunction
 
-    " NOTE: If you want to use nvim-r help instead of coc help:
-    " nnoremap <buffer> K <localleader>rh
-    " Or integrate it into Show_coc_documentation()
     function! Show_coc_documentation()
-      " Vim docs
       if (index(['vim','help'], &filetype) >= 0)
         execute 'h '.expand('<cword>')
       elseif (index(['r', 'rmd'], &filetype) >= 0)
-          call RAction("help")
-      " Non-Vim docs
+          call RAction("help") " ;rh
       else
         call CocAction('doHover')
       endif
     endfunction
 endif
+" TODO: Improve numpy objects' signature and documentation. Currently the only
+" proper way to get the docs is to evaluate help(<numpy object>) within a Python
+" repl. Could you do this by setting up a source to read the text returned by
+" the above, or else find the help files on disk and use those as a source?
 " TODO: Can I combine nvim-r omnicompletion for packages and list elements
 " (e.g., mtcars$cyl) without messing up coc.nvim completion?
 " TODO: Investigate workspace folders, coc-search

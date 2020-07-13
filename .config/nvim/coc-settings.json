@@ -7,13 +7,16 @@
 
     // TODO: Configure code lens for popup revision history (disabled by default)
 
-
-    "suggest.floatEnable": false,
+    //"signature.target": "echo",
+    // Disables documentation for completion items
+    //"suggest.floatEnable": false,
+    // Send diagnostics to the echo area instead of float
+    "diagnostic.messageTarget": "echo",
     // Autoformat on save using language-specific autoformatter
     "coc.preferences.formatOnSaveFiletypes": ["python"],
     "suggest.minTriggerInputLength": 1,
     // Does this enable previewing documentation? Doesn't seem to affect it. So what then?
-    "suggest.enablePreview": false,
+    "suggest.enablePreview": true,
     // Beginning completion with first item selected prevents <CR> from ignoring completion suggestions
     "coc.preferences.noselect": true,
     "coc.preferences.colorSupport": true,
