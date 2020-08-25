@@ -17,8 +17,18 @@ end
 
 switch (uname)
     case Darwin
-	# Use GNU find as find, rather than gfind
-	# (https://formulae.brew.sh/formula/findutils)
-	set -g fish_user_paths (brew --prefix)/opt/findutils/libexec/gnubin  $fish_user_paths
+    # Use GNU find as find, rather than gfind
+    # (https://formulae.brew.sh/formula/findutils)
+    set -g fish_user_paths (brew --prefix)/opt/findutils/libexec/gnubin  $fish_user_paths
 end
 set -g fish_user_paths "/usr/local/opt/libxml2/bin" $fish_user_paths
+
+# emacs ansi-term support
+if test -n "$EMACS"
+  set -x TERM eterm-color
+end
+
+# this function may be required by ansi-term
+function fish_title
+  true
+end
